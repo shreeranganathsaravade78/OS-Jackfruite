@@ -18,7 +18,7 @@ sudo apt install -y build-essential linux-headers-$(uname -r)
 
 ### Step 2 — Clone the repository
 git clone https://github.com/shreeranganathsaravade78/OS-Jackfruite.git
-cd OS-Jackfruite/boilerplate
+cd OS-Jackfruite/Codes
 
 ### Step 3 — Download Alpine Linux root filesystem (only once)
 mkdir rootfs-alpha rootfs-beta rootfs-base
