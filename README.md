@@ -126,7 +126,7 @@ ps aux | grep defunct   # should show no container zombies
 
 `lsmod | grep monitor` confirms the module is loaded. `ls -l /dev/container_monitor` shows the character device at major number 239, confirming the kernel module registered successfully and is ready to accept `ioctl()` calls from the supervisor.
 
-![Kernel module loaded](Screenshots/screenshot1-module-loaded.png)
+![Kernel module loaded](Screenshots/1-module-loaded.png)
 
 ---
 
@@ -134,7 +134,7 @@ ps aux | grep defunct   # should show no container zombies
 
 `alpha` (pid=90303) started with `--soft-mib 48 --hard-mib 80` and `beta` (pid=90326) with `--soft-mib 64 --hard-mib 96`. Both are simultaneously in `running` state under one supervisor, demonstrating multi-container management with per-container memory limit tracking.
 
-![PS output showing two containers](Screenshots/screenshot2-ps-output.png)
+![PS output showing two containers](Screenshots/2-ps-output.png)
 
 ---
 
@@ -142,11 +142,11 @@ ps aux | grep defunct   # should show no container zombies
 
 Shows continuous output from `cpu_hog` streamed through the logging pipeline — from the container's stdout → pipe → producer thread → bounded buffer → consumer thread → log file. The log confirms both data capture and the progression of work inside the container.
 
-![Logs 1](Screenshots/screenshot3-logs_1.png)
-![Logs 2](Screenshots/screenshot3-logs_2.png)
-![Logs 3](Screenshots/screenshot3-logs_3.png)
-![Logs 4](Screenshots/screenshot3-logs_4.png)
-![Logs 5](Screenshots/screenshot3-logs_5.png)
+![Logs 1](Screenshots/3-logs_1.png)
+![Logs 2](Screenshots/3-logs_2.png)
+![Logs 3](Screenshots/3-logs_3.png)
+![Logs 4](Screenshots/3-logs_4.png)
+![Logs 5](Screenshots/3-logs_5.png)
 
 ---
 
@@ -154,7 +154,7 @@ Shows continuous output from `cpu_hog` streamed through the logging pipeline —
 
 `sudo ./engine stop hog3` sends a stop command over the UNIX domain socket at `/tmp/engine_supervisor.sock`. Response: `OK: 'hog3' force-killed`. Follow-up `ps` confirms the state transition — `hog3` now shows `killed`, while `alpha` and `beta` continue running unaffected.
 
-![CLI IPC](Screenshots/screenshot4-cli-ipc.png)
+![CLI IPC](Screenshots/4-cli-ipc.png)
 
 ---
 
@@ -162,7 +162,7 @@ Shows continuous output from `cpu_hog` streamed through the logging pipeline —
 
 The kernel module detected `memhog` crossing its 32 MiB soft limit. RSS at event: **33,356 KB**. The container was **not killed** — soft limit is advisory only.
 
-![Soft limit warning](Screenshots/screenshot5-softlimit.png)
+![Soft limit warning](Screenshots/5-softlimit.png)
 
 ---
 
@@ -170,7 +170,7 @@ The kernel module detected `memhog` crossing its 32 MiB soft limit. RSS at event
 
 `memhog` exceeded its 64 MiB hard limit at **66,124 KB**. `SIGKILL` was sent by the kernel module. `engine ps | grep memhog` confirms state updated to `killed`.
 
-![Hard limit enforcement](Screenshots/screenshot6-hardlimit.png)
+![Hard limit enforcement](Screenshots/6-hardlimit.png)
 
 ---
 
@@ -178,7 +178,7 @@ The kernel module detected `memhog` crossing its 32 MiB soft limit. RSS at event
 
 `hog4` and `hog5` both run `cpu_hog` concurrently at `nice=0`. Identical throughput confirms Linux CFS distributed CPU time fairly between equal-priority processes.
 
-![Scheduler equal priority](Screenshots/screenshot7-scheduler.png)
+![Scheduler equal priority](Screenshots/7-scheduler.png)
 
 ---
 
@@ -186,7 +186,7 @@ The kernel module detected `memhog` crossing its 32 MiB soft limit. RSS at event
 
 Supervisor stopped cleanly with Ctrl+C. `sudo rmmod monitor` succeeded. `ps aux | grep defunct` shows no zombie processes — all container children were properly reaped via `waitpid()`.
 
-![Clean teardown](Screenshots/screenshot8-cleanup.png)
+![Clean teardown](Screenshots/8-cleanup.png)
 
 ---
 
@@ -202,7 +202,7 @@ Supervisor stopped cleanly with Ctrl+C. `sudo rmmod monitor` succeeded. `ps aux 
 
 `highprio` (nice=-5) vs `lowprio` (nice=+10) running the same CPU workload concurrently. `highprio` completed significantly more iterations in the same time, confirming CFS weight-based scheduling.
 
-![Scheduler nice values](Screenshots/screenshot10-scheduler-nice.png)
+![Scheduler nice values](Screenshots/10-scheduler-nice.png)
 
 ---
 
